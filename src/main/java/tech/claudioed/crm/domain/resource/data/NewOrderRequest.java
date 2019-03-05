@@ -14,6 +14,6 @@ public class NewOrderRequest {
 
   private String customerId;
 
-  private String requestid;
+  private String requestId;
 
 }
