@@ -21,9 +21,9 @@ public class ClaimService {
     this.natsConnection = natsConnection;
   }
 
-  public void notifyClaim(Event event){
+  public void notifyClaim(String orderId,Event event){
     log.info("Notifying event {}", event.toString());
-    final ClaimRequest claim = ClaimRequest.builder().type("claim").data(event.getData()).build();
+    final ClaimRequest claim = ClaimRequest.builder().type("claim").orderId(orderId).data(event.getData()).build();
     this.natsConnection.publish("request-claims",claim.toString().getBytes());
     log.info("Event {} notified successfully", event.getId());
   }
