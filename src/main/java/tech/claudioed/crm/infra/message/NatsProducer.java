@@ -38,6 +38,7 @@ public class NatsProducer {
         .userInfo(natsUser,natsPass)
         .maxReconnects(-1)
         .reconnectBufferSize(-1)
+        .connectionName(System.getenv("HOSTNAME"))
         .server(natsHost)
         .build());
   }
