@@ -1,6 +1,8 @@
 package tech.claudioed.crm.domain.service;
 
 import io.nats.client.Connection;
+import java.time.Duration;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ public class ClaimService {
     this.natsConnection = natsConnection;
   }
 
+  @SneakyThrows
   public void notifyClaim(String orderId,Event event){
     log.info("Notifying event {}", event.toString());
     final ClaimRequest claim = ClaimRequest.builder().type("claim").orderId(orderId).data(event.getData()).build();
     this.natsConnection.publish("request-claims",claim.toString().getBytes());
+    natsConnection.flush(Duration.ofSeconds(5));
     log.info("Event {} notified successfully", event.getId());
   }
 
