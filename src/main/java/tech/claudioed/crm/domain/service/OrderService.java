@@ -1,12 +1,12 @@
 package tech.claudioed.crm.domain.service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Service;
 import tech.claudioed.crm.domain.Event;
 import tech.claudioed.crm.domain.Order;
@@ -14,6 +14,7 @@ import tech.claudioed.crm.domain.exception.OrderNotFound;
 import tech.claudioed.crm.domain.repository.OrderRepository;
 import tech.claudioed.crm.domain.resource.data.EventRequest;
 import tech.claudioed.crm.domain.resource.data.NewOrderRequest;
+import tech.claudioed.crm.domain.service.event.OrderEventHandler;
 
 /** @author claudioed on 2019-03-05. Project crm */
 @Slf4j
@@ -22,8 +23,12 @@ public class OrderService {
 
   private final OrderRepository orderRepository;
 
-  public OrderService(OrderRepository orderRepository) {
+  private final BeanFactory factory;
+
+  public OrderService(OrderRepository orderRepository,
+      BeanFactory factory) {
     this.orderRepository = orderRepository;
+    this.factory = factory;
   }
 
   public Order find(String id) {
@@ -49,20 +54,8 @@ public class OrderService {
   }
 
   public Event addEvent(String id, EventRequest eventRequest) {
-    final Event event =
-        Event.builder()
-            .id(UUID.randomUUID().toString())
-            .type(eventRequest.getType())
-            .at(LocalDateTime.now())
-            .data(eventRequest.getData())
-            .build();
-    final Optional<Order> orderOptional = this.orderRepository.findById(id);
-    if (orderOptional.isPresent()) {
-      final Order order = orderOptional.get();
-      this.orderRepository.save(order.addEvent(event));
-      return event;
-    }
-    log.error("Order id " + id + " not found");
-    throw new OrderNotFound("Order id " + id + " not found");
+    log.info("Receiving new order event order id {} type {}",id,eventRequest.getType());
+    return factory.getBean(eventRequest.getType().toLowerCase(), OrderEventHandler.class).handle(id,eventRequest);
   }
+
 }
