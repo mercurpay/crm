@@ -23,7 +23,7 @@ public class ClaimEventHandler extends AbstractOrderEventHandler implements Orde
   public Event handle(String orderId, EventRequest eventRequest) {
     log.info("New fraud event for order id {} ", orderId);
     final Event event = create(eventRequest);
-    this.claimService.notifyClaim(event);
+    this.claimService.notifyClaim(orderId,event);
     return persist(orderId, event);
   }
 }
