@@ -39,7 +39,5 @@ public class ClaimEventHandler extends AbstractOrderEventHandler implements Orde
       log.error("Order id " + orderId + " not found");
       throw new OrderNotFound("Order id " + orderId + " not found");
     }
-
-
   }
 }

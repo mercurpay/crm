@@ -1,6 +1,7 @@
 package tech.claudioed.crm.domain.service.event;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,15 @@ public abstract class AbstractOrderEventHandler implements OrderEventHandler {
         .type(request.getType())
         .at(LocalDateTime.now())
         .data(request.getData())
+        .build();
+  }
+
+  Event create(String type,Map<String,Object> data){
+    return Event.builder()
+        .id(UUID.randomUUID().toString())
+        .type(type)
+        .at(LocalDateTime.now())
+        .data(data)
         .build();
   }
 
