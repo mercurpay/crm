@@ -17,7 +17,7 @@ public class FraudUnconfirmedEventHandler extends AbstractOrderEventHandler impl
 
   @Override
   public Event handle(String orderId, EventRequest eventRequest) {
-    log.info("New approved event for order id {} ", orderId);
+    log.info("New unconfirmed fraud event for order id {} ", orderId);
     final Event event = create(eventRequest);
     return persist(orderId,event);
   }
