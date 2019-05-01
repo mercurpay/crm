@@ -39,7 +39,7 @@ public class StartShipmentOrderHandler extends AbstractOrderEventHandler
   @Override
   @SneakyThrows
   public Event handle(@NonNull String orderId, @NonNull EventRequest eventRequest) {
-    log.info("Receiving approved event. Starting serialization...");
+    log.info("Receiving approved event. Starting serialization for start shipment process...");
     final ApprovedEventData approvedEventData =
         this.mapper.readValue(
             this.mapper.writerWithDefaultPrettyPrinter().writeValueAsString(eventRequest.getData()),
@@ -55,6 +55,7 @@ public class StartShipmentOrderHandler extends AbstractOrderEventHandler
     final Event startShipment =
         create("startShipment", this.mapper.convertValue(startShipmentEvent, Map.class));
     this.startShipmentEventSender.send(startShipment);
+    log.info("Start shipment processed successfully!");
     return persist(orderId, startShipment);
   }
 }

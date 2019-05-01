@@ -19,11 +19,15 @@ public class ClaimEventHandler extends AbstractOrderEventHandler implements Orde
 
   private final OrderRepository orderRepository;
 
+  private final StopShipmentOrderHandler stopShipmentOrderHandler;
+
   public ClaimEventHandler(OrderRepository orderRepository, ClaimService claimService,
-      OrderRepository orderRepository1) {
+      OrderRepository orderRepository1,
+      StopShipmentOrderHandler stopShipmentOrderHandler) {
     super(orderRepository);
     this.claimService = claimService;
     this.orderRepository = orderRepository1;
+    this.stopShipmentOrderHandler = stopShipmentOrderHandler;
   }
 
   @Override
@@ -34,6 +38,7 @@ public class ClaimEventHandler extends AbstractOrderEventHandler implements Orde
     if(order.isPresent()){
       final Order orderData = order.get();
       this.claimService.notifyClaim(orderId,orderData.getCustomerId(),event);
+      this.stopShipmentOrderHandler.handle(orderId,eventRequest);
       return persist(orderId, event);
     }else {
       log.error("Order id " + orderId + " not found");
