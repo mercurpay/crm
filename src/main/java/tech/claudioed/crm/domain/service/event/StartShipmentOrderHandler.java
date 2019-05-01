@@ -13,6 +13,7 @@ import tech.claudioed.crm.domain.resource.data.EventRequest;
 import tech.claudioed.crm.domain.service.CustomerService;
 import tech.claudioed.crm.domain.service.data.ApprovedEventData;
 import tech.claudioed.crm.domain.service.data.StartShipmentEvent;
+import tech.claudioed.crm.domain.service.event.sender.StartShipmentEventSender;
 
 /** @author claudioed on 2019-04-13. Project crm */
 @Slf4j
@@ -24,11 +25,15 @@ public class StartShipmentOrderHandler extends AbstractOrderEventHandler
 
   private final ObjectMapper mapper;
 
+  private final StartShipmentEventSender startShipmentEventSender;
+
   public StartShipmentOrderHandler(
-      OrderRepository orderRepository, CustomerService customerService, ObjectMapper mapper) {
+      OrderRepository orderRepository, CustomerService customerService, ObjectMapper mapper,
+      StartShipmentEventSender startShipmentEventSender) {
     super(orderRepository);
     this.customerService = customerService;
     this.mapper = mapper;
+    this.startShipmentEventSender = startShipmentEventSender;
   }
 
   @Override
@@ -49,6 +54,7 @@ public class StartShipmentOrderHandler extends AbstractOrderEventHandler
             .build();
     final Event startShipment =
         create("startShipment", this.mapper.convertValue(startShipmentEvent, Map.class));
+    this.startShipmentEventSender.send(startShipment);
     return persist(orderId, startShipment);
   }
 }
