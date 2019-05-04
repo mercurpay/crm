@@ -11,13 +11,14 @@
   </parent>
   <groupId>tech.claudioed</groupId>
   <artifactId>crm</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>crm</name>
   <description>CRM for Ecommerce</description>
 
   <properties>
     <java.version>1.8</java.version>
     <docker-plugin.version>3.5.42</docker-plugin.version>
+    <grpc.version>1.16.0</grpc.version>
   </properties>
 
   <dependencies>
@@ -55,6 +56,33 @@
     </dependency>
 
     <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.nats</groupId>
+      <artifactId>jnats</artifactId>
+      <version>2.4.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-netty</artifactId>
+      <version>${grpc.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-protobuf</artifactId>
+      <version>${grpc.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-stub</artifactId>
+      <version>${grpc.version}</version>
       <groupId>io.jaegertracing</groupId>
       <artifactId>jaeger-tracerresolver</artifactId>
       <version>0.34.0</version>
@@ -62,11 +90,51 @@
 
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>latest-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/releases</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+  </repositories>
+
   <build>
+
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.5.0.Final</version>
+      </extension>
+    </extensions>
 
     <finalName>crm</finalName>
 
     <plugins>
+
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <version>0.5.0</version>
+        <configuration>
+          <protocArtifact>
+            com.google.protobuf:protoc:3.3.0:exe:${os.detected.classifier}
+          </protocArtifact>
+          <pluginId>grpc-java</pluginId>
+          <pluginArtifact>
+            io.grpc:protoc-gen-grpc-java:1.4.0:exe:${os.detected.classifier}
+          </pluginArtifact>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>compile-custom</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.springframework.boot</groupId>
