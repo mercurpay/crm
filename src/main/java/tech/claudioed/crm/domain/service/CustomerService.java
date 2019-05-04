@@ -30,7 +30,7 @@ public class CustomerService {
     log.info("Customer SVC PORT {}",customerPort);
     this.customerHost = customerHost;
     this.customerPort = customerPort;
-    this.managedChannel = ManagedChannelBuilder.forAddress(this.customerHost, this.customerPort).build();
+    this.managedChannel = ManagedChannelBuilder.forAddress(this.customerHost, this.customerPort).usePlaintext().build();
   }
 
   public Customer customer(String id) {
