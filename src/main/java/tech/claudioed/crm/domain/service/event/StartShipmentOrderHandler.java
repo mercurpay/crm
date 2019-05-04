@@ -53,7 +53,7 @@ public class StartShipmentOrderHandler extends AbstractOrderEventHandler
             .data(this.mapper.convertValue(customerData, Map.class))
             .build();
     final Event startShipment =
-        create("START_SHIPMENT", this.mapper.convertValue(startShipmentEvent, Map.class));
+        create("START_SHIPMENT_REQUEST", this.mapper.convertValue(startShipmentEvent, Map.class));
     this.startShipmentEventSender.send(startShipmentEvent);
     log.info("Start shipment processed successfully!");
     return persist(orderId, startShipment);

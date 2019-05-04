@@ -36,7 +36,7 @@ public class StopShipmentOrderHandler extends AbstractOrderEventHandler
     log.info("Receiving fraud event. Starting serialization for stop shipment process...");
     final StopShipmentEvent stopShipmentEvent = StopShipmentEvent.builder().orderId(orderId)
         .data(eventRequest.getData()).build();
-    final Event stopShipment = create("stopShipment",this.mapper.convertValue(stopShipmentEvent, Map.class));
+    final Event stopShipment = create("STOP_SHIPMENT_REQUEST",this.mapper.convertValue(stopShipmentEvent, Map.class));
     this.stopShipmentEventSender.send(stopShipment);
     log.info("Stop shipment processed successfully!");
     return persist(orderId,stopShipment);
