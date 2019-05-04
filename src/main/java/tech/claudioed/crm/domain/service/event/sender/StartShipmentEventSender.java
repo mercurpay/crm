@@ -5,7 +5,6 @@ import io.nats.client.Connection;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import tech.claudioed.crm.domain.Event;
 import tech.claudioed.crm.domain.service.data.StartShipmentEvent;
 
 /** @author claudioed on 2019-04-21. Project crm */
@@ -22,7 +21,7 @@ public class StartShipmentEventSender {
   }
 
   @SneakyThrows
-  public void send(Event startShipmentEvent) {
+  public void send(StartShipmentEvent startShipmentEvent) {
     this.connection.publish("start-shipment", this.mapper.writeValueAsBytes(startShipmentEvent));
   }
 
