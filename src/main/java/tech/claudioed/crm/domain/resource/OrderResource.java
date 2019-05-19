@@ -1,5 +1,6 @@
 package tech.claudioed.crm.domain.resource;
 
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +16,6 @@ import tech.claudioed.crm.domain.resource.data.EventRequest;
 import tech.claudioed.crm.domain.resource.data.NewOrderRequest;
 import tech.claudioed.crm.domain.service.OrderService;
 
-/**
- * @author claudioed on 2019-03-05.
- * Project crm
- */
 @RestController
 @RequestMapping("/api/orders")
 public class OrderResource {
@@ -30,7 +27,7 @@ public class OrderResource {
   }
 
   @PostMapping
-  public ResponseEntity<Order> newOrder(@RequestBody NewOrderRequest newOrderRequest,
+  public ResponseEntity<Order> newOrder(@Valid @RequestBody NewOrderRequest newOrderRequest,
       UriComponentsBuilder uriBuilder){
     final Order order = this.orderService.newOrder(newOrderRequest);
     final UriComponents uriComponents =

@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * @author claudioed on 2019-03-05.
- * Project crm
- */
 @Data
 @Document(collection = "orders")
 @Builder
@@ -26,6 +22,8 @@ public class Order {
   private BigDecimal value;
 
   private String customerId;
+
+  private String productId;
 
   private Set<Event> events = new HashSet<>();
 
