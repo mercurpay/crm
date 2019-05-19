@@ -21,10 +21,13 @@ public class OrderService {
 
   private final BeanFactory factory;
 
+  private final ProductService productService;
+
   public OrderService(OrderRepository orderRepository,
-      BeanFactory factory) {
+      BeanFactory factory, ProductService productService) {
     this.orderRepository = orderRepository;
     this.factory = factory;
+    this.productService = productService;
   }
 
   public Order find(String id) {
@@ -37,7 +40,9 @@ public class OrderService {
   }
 
   public Order newOrder(@NonNull final NewOrderRequest request) {
-    return this.orderRepository.save(request.toOrder());
+    Order savedOrder = orderRepository.save(request.toOrder());
+    productService.analyzeOrder(savedOrder);
+    return savedOrder;
   }
 
   public Event addEvent(String id, EventRequest eventRequest) {
