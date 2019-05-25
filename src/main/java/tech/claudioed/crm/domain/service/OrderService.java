@@ -41,7 +41,7 @@ public class OrderService {
 
   public Order newOrder(@NonNull final NewOrderRequest request) {
     Order savedOrder = orderRepository.save(request.toOrder());
-    productService.analyzeOrder(savedOrder);
+    productService.analyzeOrder(savedOrder.toAnalyzeOrderEvent());
     return savedOrder;
   }
 

@@ -2,12 +2,11 @@ package tech.claudioed.crm.domain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.nats.client.Connection;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import tech.claudioed.crm.domain.Order;
+import tech.claudioed.crm.domain.event.AnalyzeOrderEvent;
 
 @Service
 @Slf4j
@@ -24,9 +23,9 @@ public class ProductService {
 
   @SneakyThrows
   @Async
-  void analyzeOrder(@NonNull final Order order) {
-    log.info("Received {} to be analyzed", order);
-    connection.publish("product-analyze-topic", objectMapper.writeValueAsBytes(order));
+  void analyzeOrder(final AnalyzeOrderEvent analyzeOrderEvent) {
+    log.info("Received {} to be analyzed", analyzeOrderEvent);
+    connection.publish("product-analyze-topic", objectMapper.writeValueAsBytes(analyzeOrderEvent));
   }
 
 }

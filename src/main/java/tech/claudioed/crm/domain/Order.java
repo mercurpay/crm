@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.data.mongodb.core.mapping.Document;
+import tech.claudioed.crm.domain.event.AnalyzeOrderEvent;
 
 @Data
 @Document(collection = "orders")
@@ -30,6 +31,13 @@ public class Order {
   public Order addEvent(@NonNull Event event){
     this.events.add(event);
     return this;
+  }
+
+  public AnalyzeOrderEvent toAnalyzeOrderEvent() {
+    return AnalyzeOrderEvent.builder()
+        .orderId(getId())
+        .productId(getProductId())
+        .build();
   }
 
 }
